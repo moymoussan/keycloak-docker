@@ -44,6 +44,7 @@
           </script>
         </#if>
 
+
         <#if !usernameHidden??>
           <@input.kw
             autocomplete=realm.loginWithEmailAllowed?string("email", "username")
