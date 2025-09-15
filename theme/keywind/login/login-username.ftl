@@ -28,7 +28,7 @@
         onsubmit="login.disabled = true; return true;"
       >
         <#-- AUTODISPARADOR DE PASSKEY LOGIN -->
-        <#if login.username?has_content>
+        <#if login.username?has_content && !(message?? && message.type == "error")>
           <script>
             window.addEventListener('load', function () {
               const form = document.getElementById('kc-form-login');
@@ -43,7 +43,6 @@
             });
           </script>
         </#if>
-
 
         <#if !usernameHidden??>
           <@input.kw
