@@ -46,7 +46,7 @@
       requireResidentKey: '${requireResidentKey?default("")}',
       rpEntityName: '${rpEntityName?default("")}',
       rpId: '${rpId?default("")}',
-      signatureAlgorithms: '${signatureAlgorithms?default("")}',
+      signatureAlgorithms: [<#list signatureAlgorithms![] as alg>'${alg}'<#if alg_has_next>, </#if></#list>],
       unsupportedBrowserText: '${msg("webauthn-unsupported-browser-text")?no_esc}',
       userId: '${userid?default("")}',
       userVerificationRequirement: '${userVerificationRequirement?default("")}',
@@ -54,3 +54,4 @@
     })
   })
 </script>
+
