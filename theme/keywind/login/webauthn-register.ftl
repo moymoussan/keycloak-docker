@@ -38,6 +38,7 @@
 <script>
   document.addEventListener('alpine:init', () => {
     Alpine.store('webAuthnRegister', {
+      signatureAlgorithms: '${signatureAlgorithms?join(",")?default("")}',
       attestationConveyancePreference: '${attestationConveyancePreference?default("")}',
       authenticatorAttachment: '${authenticatorAttachment?default("")}',
       challenge: '${challenge?default("")}',
@@ -46,7 +47,6 @@
       requireResidentKey: '${requireResidentKey?default("")}',
       rpEntityName: '${rpEntityName?default("")}',
       rpId: '${rpId?default("")}',
-      signatureAlgorithms: [<#list signatureAlgorithms![] as alg>'${alg}'<#if alg_has_next>, </#if></#list>],
       unsupportedBrowserText: '${msg("webauthn-unsupported-browser-text")?no_esc}',
       userId: '${userid?default("")}',
       userVerificationRequirement: '${userVerificationRequirement?default("")}',
