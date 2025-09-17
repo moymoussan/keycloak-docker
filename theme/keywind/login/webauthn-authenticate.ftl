@@ -7,7 +7,6 @@
     <!-- Header vacío si no lo necesitas -->
   <#elseif section="form">
     <style>
-      /* Aquí va tu CSS personalizado */
       body {
           background: #000000;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

@@ -1,4 +1,4 @@
-<#import "template.ftl" as layout>
+<#import "template2.ftl" as layout>
 <#import "components/atoms/button.ftl" as button>
 <#import "components/atoms/button-group.ftl" as buttonGroup>
 
