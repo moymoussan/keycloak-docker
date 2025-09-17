@@ -5,22 +5,42 @@
   <#if section="title">
     Verificación segura - WhatsApp
   <#elseif section="header">
-    <div style="text-align: center; margin-bottom: 2rem;">
+    <style>
+      /* Sobrescribir estilos de la template base */
+      .card {
+        background: white !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 2rem !important;
+      }
+      
+      .card-header {
+        text-align: center !important;
+        padding: 0 !important;
+        margin-bottom: 2rem !important;
+      }
+      
+      .card-content {
+        padding: 0 !important;
+      }
+    </style>
+    
+    <div class="verification-header">
       <!-- Logo/Icono de verificación -->
-      <div style="background: #3dc28d; width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center;">
+      <div class="verification-icon">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
           <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
         </svg>
       </div>
-      <h1 style="color: #000000; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;">
+      <h1 class="verification-title">
         Verificación segura
       </h1>
-      <p style="color: #666666; font-size: 0.9rem; line-height: 1.4;">
+      <p class="verification-description">
         Confirma tu identidad para autorizar la operación<br>solicitada en WhatsApp.
       </p>
     </div>
   <#elseif section="form">
-    <div x-data="webAuthnAuthenticate" style="background: #ffffff; padding: 0;">
+    <div x-data="webAuthnAuthenticate" class="verification-content">
       <form action="${url.loginAction}" method="post" x-ref="webAuthnForm">
         <input name="authenticatorData" type="hidden" x-ref="authenticatorDataInput" />
         <input name="clientDataJSON" type="hidden" x-ref="clientDataJSONInput" />
@@ -38,7 +58,7 @@
         </form>
       </#if>
       
-      <div style="text-align: center; margin-top: 2rem;">
+      <div class="verification-button-container">
         <@button.kw 
           @click="webAuthnAuthenticate" 
           color="primary" 
@@ -49,6 +69,43 @@
         </@button.kw>
       </div>
     </div>
+    
+    <style>
+      /* Estilos específicos para esta página */
+      .verification-icon {
+        background: #3dc28d;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .verification-title {
+        color: #000000;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      
+      .verification-description {
+        color: #666666;
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+      
+      .verification-button-container {
+        text-align: center;
+        margin-top: 2rem;
+      }
+      
+      /* Reset de estilos heredados */
+      body {
+        background: white !important;
+      }
+    </style>
   </#if>
 </@layout.registrationLayout>
 
