@@ -1,141 +1,97 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Verificación segura - WhatsApp</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<#import "template.ftl" as layout>
+<#import "components/atoms/button.ftl" as button>
+
+<@layout.registrationLayout script="dist/webAuthnAuthenticate.js"; section>
+  <#if section="title">
+    Verificación segura - WhatsApp
+  <#elseif section="header">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background: #000000;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            color: white;
-        }
-        
-        .header {
-            margin-bottom: 1rem;
-            margin-top: 1rem
-        }
-        
-        .logo {
-            height: 40px;
-            margin-bottom: 2rem;
-            margin-left: 1rem;
-        }
-        
-        .content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: start;
-            text-align: center;
-        }
-        
-        .verification-icon {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 3rem;
-        }
-        
-        .title {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #ffffff;
-            text-align: center;
-        }
-        
-        .description {
-            font-size: 16px;
-            color: #a0a0a0;
-            line-height: 1.5;
-            margin-bottom: 3rem;
-            max-width: 300px;
-            text-align: center;
-        }
-        
-        .button {
-            background: #25D366;
-            color: #000000 !important;
-            border: none;
-            padding: 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            width: 100%;
-            width: 300px;
-            cursor: pointer;
-            text-decoration: none;
-            display: block;
-            text-align: center;
-            margin: 0 auto;
-        }
-        
-        .button:hover {
-            background: #20BA5A;
-        }
-        
-        form {
-            width: 100%;
-            max-width: 300px;
-            margin: 0 auto;
-        }
-        
-        .hidden {
-            display: none;
-        }
+      /* Sobrescribir estilos de la template base */
+      .card {
+        background: #000000 !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+      }
+      
+      .card-header {
+        text-align: left !important;
+        padding: 0 !important;
+        margin-bottom: 1rem !important;
+      }
+      
+      .card-content {
+        padding: 0 !important;
+        background: #000000 !important;
+      }
+      
+      /* Ocultar elementos no deseados */
+      .alert, .text-secondary-600, .text-sm {
+        display: none !important;
+      }
     </style>
-</head>
-<body>
-    <div class="header">
-        <img src="${url.resourcesPath}/img/logo-nono-white.png" alt="Logo" class="logo">
+    
+    <div style="margin-left: 1rem; margin-top: 1rem;">
+      <img src="${url.resourcesPath}/img/logo-nono-white.png" alt="Logo" style="height: 40px;">
+    </div>
+  <#elseif section="form">
+    <div x-data="webAuthnAuthenticate" style="background: #000000; text-align: center; padding: 20px;">
+      <form action="${url.loginAction}" method="post" x-ref="webAuthnForm">
+        <input name="authenticatorData" type="hidden" x-ref="authenticatorDataInput" />
+        <input name="clientDataJSON" type="hidden" x-ref="clientDataJSONInput" />
+        <input name="credentialId" type="hidden" x-ref="credentialIdInput" />
+        <input name="error" type="hidden" x-ref="errorInput" />
+        <input name="signature" type="hidden" x-ref="signatureInput" />
+        <input name="userHandle" type="hidden" x-ref="userHandleInput" />
+      </form>
+      
+      <#if authenticators??>
+        <form x-ref="authnSelectForm">
+          <#list authenticators.authenticators as authenticator>
+            <input value="${authenticator.credentialId}" type="hidden" />
+          </#list>
+        </form>
+      </#if>
+      
+      <!-- Tu diseño personalizado -->
+      <h1 style="font-size: 28px; font-weight: 600; color: #ffffff; margin-bottom: 12px;">
+        Verificación segura 🔐
+      </h1>
+      <p style="font-size: 16px; color: #a0a0a0; line-height: 1.5; margin-bottom: 3rem; max-width: 300px; margin-left: auto; margin-right: auto;">
+        Confirma tu identidad para autorizar la operación solicitada en WhatsApp.
+      </p>
+      
+      <img src="${url.resourcesPath}/img/faceid.webp" alt="Verificación" style="width: 120px; height: 120px; margin-bottom: 3rem;">
+      
+      <!-- Botón que mantiene la funcionalidad Alpine -->
+      <@button.kw 
+        @click="webAuthnAuthenticate" 
+        color="primary" 
+        type="button"
+        style="background: #25D366; color: #000000; border: none; padding: 16px; border-radius: 8px; font-weight: 600; font-size: 16px; width: 300px; cursor: pointer; margin: 0 auto; display: block;"
+      >
+        Continuar
+      </@button.kw>
     </div>
     
-    <div class="content">
-      <h1 class="title">Verificación segura 🔐</h1>
-        <p class="description">Confirma tu identidad para autorizar la operación solicitada en WhatsApp.</p>
-        <img src="${url.resourcesPath}/img/faceid.webp" alt="Verificación" class="verification-icon">
-        
-        <div>
-            <form action="${url.loginAction}" method="post" id="webAuthnForm">
-                <input name="authenticatorData" type="hidden" id="authenticatorDataInput" />
-                <input name="clientDataJSON" type="hidden" id="clientDataJSONInput" />
-                <input name="credentialId" type="hidden" id="credentialIdInput" />
-                <input name="error" type="hidden" id="errorInput" />
-                <input name="signature" type="hidden" id="signatureInput" />
-                <input name="userHandle" type="hidden" id="userHandleInput" />
-            </form>
-            
-            <#if authenticators??>
-                <form id="authnSelectForm">
-                    <#list authenticators.authenticators as authenticator>
-                        <input value="${authenticator.credentialId}" type="hidden" />
-                    </#list>
-                </form>
-            </#if>
-            
-            <button class="button" onclick="handleWebAuthn()" type="button">
-                Continuar
-            </button>
-        </div>
-    </div>
+    <style>
+      /* Reset del fondo body */
+      body {
+        background: #000000 !important;
+      }
+    </style>
+  </#if>
+</@layout.registrationLayout>
 
-    <script>
-        function handleWebAuthn() {
-            console.log('Iniciando proceso de autenticación');
-
-            document.getElementById('webAuthnForm').submit();
-        }
-    </script>
-</body>
-</html>
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.store('webAuthnAuthenticate', {
+      challenge: '${challenge}',
+      createTimeout: '${createTimeout}',
+      isUserIdentified: '${isUserIdentified}',
+      rpId: '${rpId}',
+      unsupportedBrowserText: '${msg("webauthn-unsupported-browser-text")?no_esc}',
+      userVerification: '${userVerification}',
+    })
+  })
+</script>
