@@ -4,18 +4,8 @@
     <title>Verificación segura - WhatsApp</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="${url.resourcesPath}/node_modules/alpinejs/dist/cdn.min.js" defer></script>
-    <script>
-        // Cargar el script webAuthnAuthenticate.js de forma compatible
-        document.addEventListener('DOMContentLoaded', function() {
-            var script = document.createElement('script');
-            script.src = '${url.resourcesPath}/dist/webAuthnAuthenticate.js';
-            script.onload = function() {
-                console.log('WebAuthn script loaded');
-            };
-            document.head.appendChild(script);
-        });
-    </script>
+    <script src="${url.resourcesCommonPath}/node_modules/alpinejs/dist/cdn.min.js" defer></script>
+    <script src="${url.resourcesPath}/dist/webAuthnAuthenticate.js" defer></script>
     <style>
         * {
             margin: 0;
@@ -64,7 +54,6 @@
             font-weight: 600;
             margin-bottom: 12px;
             color: #ffffff;
-            text-align: center;
         }
         
         .description {
@@ -73,34 +62,35 @@
             line-height: 1.5;
             margin-bottom: 3rem;
             max-width: 300px;
-            text-align: center;
         }
         
-        .button {
-            background: #25D366;
+        /* Botón con estilos idénticos a los de Keycloak pero personalizado */
+        .webauthn-button {
+            background: #25D366 !important;
             color: #000000 !important;
-            border: none;
-            padding: 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            width: 300px;
-            cursor: pointer;
-            text-decoration: none;
-            display: block;
-            text-align: center;
-            margin: 0 auto;
+            border: none !important;
+            padding: 16px 32px !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            font-size: 16px !important;
+            width: 300px !important;
+            max-width: 100% !important;
+            cursor: pointer !important;
+            margin: 0 auto !important;
+            display: block !important;
+            text-align: center !important;
+            text-decoration: none !important;
+            transition: background-color 0.2s !important;
         }
         
-        .button:hover {
-            background: #20BA5A;
+        .webauthn-button:hover {
+            background: #20BA5A !important;
         }
         
         .hidden {
             display: none;
         }
         
-        /* Estilos para Alpine.js initialization */
         [x-cloak] {
             display: none !important;
         }
@@ -116,7 +106,6 @@
         <p class="description">Confirma tu identidad para autorizar la operación solicitada en WhatsApp.</p>
         <img src="${url.resourcesPath}/img/faceid.webp" alt="Verificación" class="verification-icon">
         
-        <!-- Alpine.js component con toda la funcionalidad WebAuthn -->
         <div x-data="webAuthnAuthenticate" x-cloak>
             <form action="${url.loginAction}" method="post" x-ref="webAuthnForm">
                 <input name="authenticatorData" type="hidden" x-ref="authenticatorDataInput" />
@@ -135,71 +124,56 @@
                 </form>
             </#if>
             
-            <button class="button" x-on:click="webAuthnAuthenticate()" type="button">
+            <!-- Botón que se renderizará siempre -->
+            <button class="webauthn-button" x-on:click="webAuthnAuthenticate()" type="button">
                 Continuar
             </button>
         </div>
     </div>
 
     <script>
-        // Inicializar Alpine.js y la funcionalidad WebAuthn
+        // Inicialización de Alpine.js con la funcionalidad completa
         document.addEventListener('alpine:init', () => {
-            Alpine.data('webAuthnAuthenticate', () => ({
-                // Datos necesarios para WebAuthn
+            Alpine.store('webAuthnAuthenticate', {
                 challenge: '${challenge}',
                 createTimeout: '${createTimeout}',
                 isUserIdentified: '${isUserIdentified}',
                 rpId: '${rpId}',
+                unsupportedBrowserText: '${msg("webauthn-unsupported-browser-text")?no_esc}',
                 userVerification: '${userVerification}',
-                
-                // Inicializar
+            });
+            
+            // Definir el componente Alpine
+            Alpine.data('webAuthnAuthenticate', () => ({
                 init() {
                     console.log('WebAuthn component initialized');
                 },
                 
-                // Función principal de autenticación
-                async webAuthnAuthenticate() {
+                webAuthnAuthenticate() {
                     console.log('Iniciando autenticación WebAuthn');
-                    
-                    try {
-                        // Esta función debería ser proporcionada por webAuthnAuthenticate.js
-                        if (typeof window.startWebAuthnAuthentication === 'function') {
-                            await window.startWebAuthnAuthentication({
-                                challenge: this.challenge,
-                                timeout: this.createTimeout,
-                                rpId: this.rpId,
-                                userVerification: this.userVerification
-                            });
-                        } else {
-                            // Fallback: enviar formulario directamente
-                            this.$refs.webAuthnForm.submit();
-                        }
-                    } catch (error) {
-                        console.error('Error en autenticación WebAuthn:', error);
-                        this.$refs.errorInput.value = error.message;
+                    // La función real está en webAuthnAuthenticate.js
+                    if (typeof window.webAuthnAuthenticate === 'function') {
+                        window.webAuthnAuthenticate();
+                    } else {
+                        // Fallback
                         this.$refs.webAuthnForm.submit();
                     }
                 }
             }));
         });
 
-        // Fallback en caso de que Alpine.js falle
-        function fallbackWebAuthn() {
-            console.log('Usando fallback WebAuthn');
-            document.querySelector('form[x-ref="webAuthnForm"]').submit();
-        }
-    </script>
-    
-    <!-- Fallback para el botón en caso de que Alpine no cargue -->
-    <noscript>
-        <style>
-            .button {
-                display: block !important;
+        // Fallback por si Alpine.js no carga
+        setTimeout(() => {
+            if (typeof Alpine === 'undefined') {
+                console.log('Alpine.js no cargó, usando fallback');
+                const buttons = document.querySelectorAll('.webauthn-button');
+                buttons.forEach(button => {
+                    button.onclick = () => {
+                        document.querySelector('form[x-ref="webAuthnForm"]').submit();
+                    };
+                });
             }
-        </style>
-        <script>
-            document.querySelector('.button').onclick = fallbackWebAuthn;
-        </script>
-    </noscript>
+        }, 1000);
+    </script>
 </body>
 </html>
