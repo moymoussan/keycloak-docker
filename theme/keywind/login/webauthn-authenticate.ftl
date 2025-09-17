@@ -27,7 +27,7 @@
         
         .logo {
             height: 40px;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
         }
         
         .content {
@@ -98,10 +98,9 @@
     </div>
     
     <div class="content">
-        <img src="${url.resourcesPath}/img/face-id.webp" alt="Verificación" class="verification-icon">
-        
-        <h1 class="title">Verificación segura</h1>
+      <h1 class="title">Verificación segura 🔐</h1>
         <p class="description">Confirma tu identidad para autorizar la operación solicitada en WhatsApp.</p>
+        <img src="${url.resourcesPath}/img/faceid.webp" alt="Verificación" class="verification-icon">
         
         <div x-data="webAuthnAuthenticate">
             <form action="${url.loginAction}" method="post" x-ref="webAuthnForm">
