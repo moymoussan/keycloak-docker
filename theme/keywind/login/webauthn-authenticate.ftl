@@ -1,4 +1,4 @@
-<#import "template2.ftl" as layout>
+<#import "template.ftl" as layout>
 
 <@layout.registrationLayout script="dist/webAuthnAuthenticate.js"; section>
   <#if section="title">
