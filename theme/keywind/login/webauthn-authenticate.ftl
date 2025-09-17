@@ -6,36 +6,47 @@
     Verificación segura - WhatsApp
   <#elseif section="header">
     <style>
-      /* Sobrescribir estilos de la template base */
-      .card {
+      /* Reset completo de estilos heredados */
+      body {
         background: #000000 !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        color: white !important;
+      }
+      
+      .card {
+        all: unset !important;
+        background: #000000 !important;
+        width: 100% !important;
+        max-width: 400px !important;
+        margin: 0 auto !important;
       }
       
       .card-header {
+        all: unset !important;
         text-align: left !important;
         padding: 0 !important;
-        margin-bottom: 1rem !important;
+        margin: 1rem 0 1rem 1rem !important;
       }
       
       .card-content {
-        padding: 0 !important;
+        all: unset !important;
         background: #000000 !important;
+        padding: 20px !important;
+        text-align: center !important;
       }
       
       /* Ocultar elementos no deseados */
-      .alert, .text-secondary-600, .text-sm {
+      .alert, .text-secondary-600, .text-sm, .heading, .logo {
         display: none !important;
       }
     </style>
     
+    <!-- Logo personalizado -->
     <div style="margin-left: 1rem; margin-top: 1rem;">
       <img src="${url.resourcesPath}/img/logo-nono-white.png" alt="Logo" style="height: 40px;">
     </div>
   <#elseif section="form">
-    <div x-data="webAuthnAuthenticate" style="background: #000000; text-align: center; padding: 20px;">
+    <div x-data="webAuthnAuthenticate" style="background: #000000; text-align: center;">
       <form action="${url.loginAction}" method="post" x-ref="webAuthnForm">
         <input name="authenticatorData" type="hidden" x-ref="authenticatorDataInput" />
         <input name="clientDataJSON" type="hidden" x-ref="clientDataJSONInput" />
@@ -53,8 +64,8 @@
         </form>
       </#if>
       
-      <!-- Tu diseño personalizado -->
-      <h1 style="font-size: 28px; font-weight: 600; color: #ffffff; margin-bottom: 12px;">
+      <!-- Contenido personalizado -->
+      <h1 style="font-size: 28px; font-weight: 600; color: #ffffff; margin-bottom: 12px; margin-top: 2rem;">
         Verificación segura 🔐
       </h1>
       <p style="font-size: 16px; color: #a0a0a0; line-height: 1.5; margin-bottom: 3rem; max-width: 300px; margin-left: auto; margin-right: auto;">
@@ -63,21 +74,31 @@
       
       <img src="${url.resourcesPath}/img/faceid.webp" alt="Verificación" style="width: 120px; height: 120px; margin-bottom: 3rem;">
       
-      <!-- Botón que mantiene la funcionalidad Alpine -->
-      <@button.kw 
-        @click="webAuthnAuthenticate" 
-        color="primary" 
-        type="button"
-        style="background: #25D366; color: #000000; border: none; padding: 16px; border-radius: 8px; font-weight: 600; font-size: 16px; width: 300px; cursor: pointer; margin: 0 auto; display: block;"
-      >
-        Continuar
-      </@button.kw>
+      <!-- Botón personalizado pero manteniendo la funcionalidad Alpine -->
+      <div style="text-align: center;">
+        <@button.kw 
+          @click="webAuthnAuthenticate" 
+          color="primary" 
+          type="button"
+          style="background: #25D366 !important; color: #000000 !important; border: none !important; padding: 16px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 16px !important; width: 300px !important; max-width: 100% !important; cursor: pointer !important; margin: 0 auto !important; display: block !important;"
+        >
+          Continuar
+        </@button.kw>
+      </div>
     </div>
     
     <style>
-      /* Reset del fondo body */
-      body {
+      /* Asegurar que todo esté negro */
+      html, body, .container, .card, .card-content, .card-header {
         background: #000000 !important;
+        color: white !important;
+      }
+      
+      /* Reset de márgenes y paddings */
+      * {
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
       }
     </style>
   </#if>
