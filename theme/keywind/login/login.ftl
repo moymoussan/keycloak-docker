@@ -9,6 +9,7 @@
 <#import "features/labels/username.ftl" as usernameLabel>
 
 <#assign usernameLabel><@usernameLabel.kw /></#assign>
+<h1>helloooooo</h1>
 
 <@layout.registrationLayout
   displayInfo=realm.password && realm.registrationAllowed && !registrationDisabled??
