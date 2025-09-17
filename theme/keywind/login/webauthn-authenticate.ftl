@@ -6,16 +6,21 @@
     Verificación segura - WhatsApp
   <#elseif section="header">
     <div style="text-align: center; margin-bottom: 2rem;">
-      <img src="${url.resourcesPath}/img/logo-nono-white.png" alt="Logo" style="height: 60px; margin-bottom: 1.5rem;">
-      <h1 style="color: #ffffff; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;">
+      <!-- Logo/Icono de verificación -->
+      <div style="background: #3dc28d; width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+        </svg>
+      </div>
+      <h1 style="color: #000000; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;">
         Verificación segura
       </h1>
-      <p style="color: #a0a0a0; font-size: 0.9rem;">
-        Confirma tu identidad para autorizar la operación solicitada en WhatsApp.
+      <p style="color: #666666; font-size: 0.9rem; line-height: 1.4;">
+        Confirma tu identidad para autorizar la operación<br>solicitada en WhatsApp.
       </p>
     </div>
   <#elseif section="form">
-    <div x-data="webAuthnAuthenticate" style="background: #000000; padding: 2rem; border-radius: 12px;">
+    <div x-data="webAuthnAuthenticate" style="background: #ffffff; padding: 0;">
       <form action="${url.loginAction}" method="post" x-ref="webAuthnForm">
         <input name="authenticatorData" type="hidden" x-ref="authenticatorDataInput" />
         <input name="clientDataJSON" type="hidden" x-ref="clientDataJSONInput" />
@@ -33,12 +38,12 @@
         </form>
       </#if>
       
-      <div style="text-align: center;">
+      <div style="text-align: center; margin-top: 2rem;">
         <@button.kw 
           @click="webAuthnAuthenticate" 
           color="primary" 
           type="button"
-          style="background: #25D366; color: #000000; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 1rem; width: 100%; cursor: pointer;"
+          style="background: #3dc28d; color: #ffffff; border: none; padding: 16px 32px; border-radius: 8px; font-weight: 600; font-size: 1.1rem; width: 100%; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"
         >
           Continuar
         </@button.kw>
