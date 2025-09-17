@@ -74,9 +74,6 @@
     </style>
 
     <div x-data="webAuthnAuthenticate" class="kc-login-content">
-      <div class="header">
-        <img src="${url.resourcesPath}/img/logo-nono-white.png" alt="Logo" class="logo">
-      </div>
 
       <div class="content">
         <h1 class="title">Verificación segura 🔐</h1>

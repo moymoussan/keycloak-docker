@@ -74,8 +74,8 @@
         }
         .logo-top-left {
           position: absolute;
-          top: 20px;
-          left: 20px;
+          margin-bottom: 2rem;
+          margin-left: 1rem;
         }
         .logo-top-left img {
           height: 40px;
