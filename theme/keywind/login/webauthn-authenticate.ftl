@@ -6,41 +6,57 @@
     Verificación segura - WhatsApp
   <#elseif section="header">
     <style>
-      /* Sobrescribir estilos de la template base */
-      .card {
+      /* Reset completo de estilos heredados */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
         background: white !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 2rem !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      
+      .card {
+        all: unset !important;
+        background: white !important;
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
       }
       
       .card-header {
-        text-align: center !important;
-        padding: 0 !important;
-        margin-bottom: 2rem !important;
+        all: unset !important;
+        margin-bottom: 2rem;
       }
       
       .card-content {
-        padding: 0 !important;
+        all: unset !important;
       }
     </style>
     
-    <div class="verification-header">
-      <!-- Logo/Icono de verificación -->
-      <div class="verification-icon">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <!-- Icono de verificación -->
+      <div style="background: #3dc28d; width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center;">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
           <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
         </svg>
       </div>
-      <h1 class="verification-title">
+      <h1 style="color: #000000; font-size: 24px; font-weight: 600; margin-bottom: 12px; line-height: 1.3;">
         Verificación segura
       </h1>
-      <p class="verification-description">
-        Confirma tu identidad para autorizar la operación<br>solicitada en WhatsApp.
+      <p style="color: #666666; font-size: 16px; line-height: 1.5;">
+        Confirma tu identidad para autorizar la operación solicitada en WhatsApp.
       </p>
     </div>
   <#elseif section="form">
-    <div x-data="webAuthnAuthenticate" class="verification-content">
+    <div x-data="webAuthnAuthenticate" style="width: 100%;">
       <form action="${url.loginAction}" method="post" x-ref="webAuthnForm">
         <input name="authenticatorData" type="hidden" x-ref="authenticatorDataInput" />
         <input name="clientDataJSON" type="hidden" x-ref="clientDataJSONInput" />
@@ -58,54 +74,17 @@
         </form>
       </#if>
       
-      <div class="verification-button-container">
+      <div style="text-align: center; margin-top: 2rem;">
         <@button.kw 
           @click="webAuthnAuthenticate" 
           color="primary" 
           type="button"
-          style="background: #3dc28d; color: #ffffff; border: none; padding: 16px 32px; border-radius: 8px; font-weight: 600; font-size: 1.1rem; width: 100%; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"
+          style="background: #3dc28d; color: white; border: none; padding: 16px; border-radius: 8px; font-weight: 600; font-size: 16px; width: 100%; cursor: pointer; height: 48px; display: flex; align-items: center; justify-content: center;"
         >
           Continuar
         </@button.kw>
       </div>
     </div>
-    
-    <style>
-      /* Estilos específicos para esta página */
-      .verification-icon {
-        background: #3dc28d;
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        margin: 0 auto 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      .verification-title {
-        color: #000000;
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-      }
-      
-      .verification-description {
-        color: #666666;
-        font-size: 0.9rem;
-        line-height: 1.4;
-      }
-      
-      .verification-button-container {
-        text-align: center;
-        margin-top: 2rem;
-      }
-      
-      /* Reset de estilos heredados */
-      body {
-        background: white !important;
-      }
-    </style>
   </#if>
 </@layout.registrationLayout>
 
