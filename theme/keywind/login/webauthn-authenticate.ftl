@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="${url.resourcesPath}/node_modules/alpinejs/dist/cdn.min.js" defer></script>
-    <script src="${url.resourcesPath}/js/dist/webAuthnAuthenticate.js" defer></script>
+    <script src="${url.resourcesPath}/dist/webAuthnAuthenticate.js" defer></script>
     <style>
         * {
             margin: 0;
