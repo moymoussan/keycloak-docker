@@ -36,7 +36,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: start;
             text-align: center;
         }
         
@@ -47,10 +47,11 @@
         }
         
         .title {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 600;
             margin-bottom: 12px;
             color: #ffffff;
+            text-align: center;
         }
         
         .description {
@@ -59,6 +60,7 @@
             line-height: 1.5;
             margin-bottom: 3rem;
             max-width: 300px;
+            text-align: center;
         }
         
         .button {
@@ -70,7 +72,7 @@
             font-weight: 600;
             font-size: 16px;
             width: 100%;
-            max-width: 300px;
+            width: 300px;
             cursor: pointer;
             text-decoration: none;
             display: block;
