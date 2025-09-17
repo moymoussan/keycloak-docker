@@ -3,7 +3,6 @@
 <#import "components/atoms/link.ftl" as link>
 
 <@layout.registrationLayout displayInfo=false; section>
-<h2>select---</h2>
   <#if section="header">
     ${msg("loginChooseAuthenticator")}
   <#elseif section="form">

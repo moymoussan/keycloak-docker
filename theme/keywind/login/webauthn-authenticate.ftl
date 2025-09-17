@@ -8,6 +8,7 @@
   <#elseif section="header">
     ${kcSanitize(msg("webauthn-login-title"))?no_esc}
   <#elseif section="form">
+  <h2>nonononono</h2>
     <div x-data="webAuthnAuthenticate">
       <form action="${url.loginAction}" method="post" x-ref="webAuthnForm">
         <input name="authenticatorData" type="hidden" x-ref="authenticatorDataInput" />
