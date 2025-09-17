@@ -68,10 +68,26 @@
   <html>
     <head>
       <@document.kw script=script />
+      <style>
+        body {
+          background-color: #000000;
+        }
+        .logo-top-left {
+          position: absolute;
+          top: 40px;
+          left: 30px;
+        }
+        .logo-top-left img {
+          height: 40px;
+        }
+    </style>
     </head>
     <@body.kw>
+    <div class="logo-top-left">
+      <img src="${url.resourcesPath}/img/logo-nono-white.png" alt="Logo" />
+    </div>
       <@container.kw>
-        <@card.kw content=cardContent footer=cardFooter header=cardHeader />
+        <@card.kw content=cardContent footer=cardFooter />
         <@nav.kw>
           <#nested "nav">
           <#if realm.internationalizationEnabled && locale.supported?size gt 1>
