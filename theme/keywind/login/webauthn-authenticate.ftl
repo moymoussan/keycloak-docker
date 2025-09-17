@@ -4,8 +4,6 @@
     <title>Verificación segura - WhatsApp</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="${url.resourcesPath}/node_modules/alpinejs/dist/cdn.min.js" defer></script>
-    <script src="${url.resourcesPath}/dist/webAuthnAuthenticate.js" defer></script>
     <style>
         * {
             margin: 0;
@@ -108,7 +106,7 @@
         <p class="description">Confirma tu identidad para autorizar la operación solicitada en WhatsApp.</p>
         <img src="${url.resourcesPath}/img/faceid.webp" alt="Verificación" class="verification-icon">
         
-        <div x-data>
+        <div>
             <form action="${url.loginAction}" method="post" id="webAuthnForm">
                 <input name="authenticatorData" type="hidden" id="authenticatorDataInput" />
                 <input name="clientDataJSON" type="hidden" id="clientDataJSONInput" />
@@ -126,44 +124,17 @@
                 </form>
             </#if>
             
-            <button class="button" onclick="webAuthnAuthenticate()" type="button">
+            <button class="button" onclick="handleWebAuthn()" type="button">
                 Continuar
             </button>
         </div>
     </div>
 
     <script>
-        // Configuración global para Alpine store (si es necesaria)
-        document.addEventListener('alpine:init', () => {
-            Alpine.store('webAuthnAuthenticate', {
-                challenge: '${challenge}',
-                createTimeout: '${createTimeout}',
-                isUserIdentified: '${isUserIdentified}',
-                rpId: '${rpId}',
-                unsupportedBrowserText: '${msg("webauthn-unsupported-browser-text")?no_esc}',
-                userVerification: '${userVerification}',
-            });
-        });
+        function handleWebAuthn() {
+            console.log('Iniciando proceso de autenticación');
 
-        // Función global para el click
-        function webAuthnAuthenticate() {
-            console.log('Iniciando autenticación WebAuthn');
-            
-            // Aquí se cargará la funcionalidad del archivo webAuthnAuthenticate.js
-            // Si el archivo no existe, necesitarás implementar la lógica aquí
-            try {
-                // Intenta llamar a la función del script cargado
-                if (typeof window.webAuthnAuthenticate === 'function') {
-                    window.webAuthnAuthenticate();
-                } else {
-                    console.warn('La función webAuthnAuthenticate no está disponible');
-                    // Envía el formulario como fallback
-                    document.getElementById('webAuthnForm').submit();
-                }
-            } catch (error) {
-                console.error('Error en autenticación WebAuthn:', error);
-                document.getElementById('webAuthnForm').submit();
-            }
+            document.getElementById('webAuthnForm').submit();
         }
     </script>
 </body>
