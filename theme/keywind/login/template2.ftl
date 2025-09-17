@@ -74,6 +74,9 @@
         }
         .logo-top-left {
           position: absolute;
+          top: 40px;
+          left: 30px;
+        }
         .logo-top-left img {
           height: 40px;
         }
