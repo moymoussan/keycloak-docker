@@ -74,9 +74,6 @@
         }
         .logo-top-left {
           position: absolute;
-          margin-bottom: 2rem;
-          margin-left: 1rem;
-        }
         .logo-top-left img {
           height: 40px;
         }
