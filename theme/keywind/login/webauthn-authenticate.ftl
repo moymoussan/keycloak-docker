@@ -94,11 +94,11 @@
 </head>
 <body>
     <div class="header">
-        <img src="${url.resourcesPath}/img/logo.png" alt="Logo" class="logo">
+        <img src="${url.resourcesPath}/img/logo-nono-white.png" alt="Logo" class="logo">
     </div>
     
     <div class="content">
-        <img src="${url.resourcesPath}/img/verification-icon.png" alt="Verificación" class="verification-icon">
+        <img src="${url.resourcesPath}/img/face-id.webp" alt="Verificación" class="verification-icon">
         
         <h1 class="title">Verificación segura</h1>
         <p class="description">Confirma tu identidad para autorizar la operación solicitada en WhatsApp.</p>
