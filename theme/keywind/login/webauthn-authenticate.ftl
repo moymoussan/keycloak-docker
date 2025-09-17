@@ -4,6 +4,8 @@
     <title>Verificación segura - WhatsApp</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="${url.resourcesPath}/node_modules/alpinejs/dist/cdn.min.js" defer></script>
+    <script src="${url.resourcesPath}/js/dist/webAuthnAuthenticate.js" defer></script>
     <style>
         * {
             margin: 0;
@@ -29,6 +31,7 @@
         .logo {
             height: 40px;
             margin-bottom: 2rem;
+            margin-left: 1rem;
         }
         
         .content {
@@ -43,7 +46,7 @@
         .verification-icon {
             width: 120px;
             height: 120px;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
         
         .title {
@@ -105,47 +108,63 @@
         <p class="description">Confirma tu identidad para autorizar la operación solicitada en WhatsApp.</p>
         <img src="${url.resourcesPath}/img/faceid.webp" alt="Verificación" class="verification-icon">
         
-        <div x-data="webAuthnAuthenticate">
-            <form action="${url.loginAction}" method="post" x-ref="webAuthnForm">
-                <input name="authenticatorData" type="hidden" x-ref="authenticatorDataInput" />
-                <input name="clientDataJSON" type="hidden" x-ref="clientDataJSONInput" />
-                <input name="credentialId" type="hidden" x-ref="credentialIdInput" />
-                <input name="error" type="hidden" x-ref="errorInput" />
-                <input name="signature" type="hidden" x-ref="signatureInput" />
-                <input name="userHandle" type="hidden" x-ref="userHandleInput" />
+        <div x-data>
+            <form action="${url.loginAction}" method="post" id="webAuthnForm">
+                <input name="authenticatorData" type="hidden" id="authenticatorDataInput" />
+                <input name="clientDataJSON" type="hidden" id="clientDataJSONInput" />
+                <input name="credentialId" type="hidden" id="credentialIdInput" />
+                <input name="error" type="hidden" id="errorInput" />
+                <input name="signature" type="hidden" id="signatureInput" />
+                <input name="userHandle" type="hidden" id="userHandleInput" />
             </form>
             
             <#if authenticators??>
-                <form x-ref="authnSelectForm">
+                <form id="authnSelectForm">
                     <#list authenticators.authenticators as authenticator>
                         <input value="${authenticator.credentialId}" type="hidden" />
                     </#list>
                 </form>
             </#if>
             
-            <button class="button" @click="webAuthnAuthenticate" type="button">
+            <button class="button" onclick="webAuthnAuthenticate()" type="button">
                 Continuar
             </button>
         </div>
     </div>
 
-    <script src="${url.resourcesPath}/node_modules/alpinejs/dist/cdn.min.js" defer></script>
     <script>
+        // Configuración global para Alpine store (si es necesaria)
         document.addEventListener('alpine:init', () => {
-            Alpine.data('webAuthnAuthenticate', () => ({
+            Alpine.store('webAuthnAuthenticate', {
                 challenge: '${challenge}',
                 createTimeout: '${createTimeout}',
                 isUserIdentified: '${isUserIdentified}',
                 rpId: '${rpId}',
                 unsupportedBrowserText: '${msg("webauthn-unsupported-browser-text")?no_esc}',
                 userVerification: '${userVerification}',
-                
-                webAuthnAuthenticate() {
-                    // Tu lógica WebAuthn existente aquí
-                    console.log('Iniciando autenticación WebAuthn');
+            });
+        });
+
+        // Función global para el click
+        function webAuthnAuthenticate() {
+            console.log('Iniciando autenticación WebAuthn');
+            
+            // Aquí se cargará la funcionalidad del archivo webAuthnAuthenticate.js
+            // Si el archivo no existe, necesitarás implementar la lógica aquí
+            try {
+                // Intenta llamar a la función del script cargado
+                if (typeof window.webAuthnAuthenticate === 'function') {
+                    window.webAuthnAuthenticate();
+                } else {
+                    console.warn('La función webAuthnAuthenticate no está disponible');
+                    // Envía el formulario como fallback
+                    document.getElementById('webAuthnForm').submit();
                 }
-            }))
-        })
+            } catch (error) {
+                console.error('Error en autenticación WebAuthn:', error);
+                document.getElementById('webAuthnForm').submit();
+            }
+        }
     </script>
 </body>
 </html>
