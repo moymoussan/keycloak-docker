@@ -19,10 +19,9 @@
   showAnotherWayIfPresent=true
 >
   <#assign cardHeader>
-    <!-- Logo personalizado -->
-    <div style="margin: 1rem 0 1rem 1rem;">
-      <img src="${url.resourcesPath}/img/logo-nono-white.png" alt="Logo" style="height: 40px;">
-    </div>
+    <@logo.kw>
+      ${kcSanitize(msg("loginTitleHtml", (realm.displayNameHtml!"")))?no_esc}
+    </@logo.kw>
     <#if !(auth?has_content && auth.showUsername() && !auth.showResetCredentials())>
       <@heading.kw>
         <#nested "header">
@@ -70,28 +69,25 @@
     <head>
       <@document.kw script=script />
       <style>
-        /* Fondo negro para toda la aplicación */
         body {
-          background: #000000 !important;
-          color: #ffffff !important;
+          background-color: #000000;
         }
-        
-        /* Card con fondo negro */
-        .card {
-          background: #000000 !important;
-          border: none !important;
-          box-shadow: none !important;
+        .logo-top-left {
+          position: absolute;
+          top: 20px;
+          left: 20px;
         }
-        
-        /* Texto blanco */
-        .card-content, .card-header, .card-footer {
-          color: #ffffff !important;
+        .logo-top-left img {
+          height: 40px;
         }
-      </style>
+    </style>
     </head>
     <@body.kw>
+    <div class="logo-top-left">
+      <img src="${url.resourcesPath}/img/logo-nono-white.png" alt="Logo" />
+    </div>
       <@container.kw>
-        <@card.kw content=cardContent footer=cardFooter header=cardHeader />
+        <@card.kw content=cardContent footer=cardFooter />
         <@nav.kw>
           <#nested "nav">
           <#if realm.internationalizationEnabled && locale.supported?size gt 1>
