@@ -4,7 +4,6 @@
     <title>Verificación segura - WhatsApp</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="${url.resourcesCommonPath}/node_modules/alpinejs/dist/cdn.min.js" defer></script>
     <style>
         * {
             margin: 0;
@@ -88,10 +87,6 @@
         .hidden {
             display: none;
         }
-        
-        [x-cloak] {
-            display: none !important;
-        }
     </style>
 </head>
 <body>
@@ -104,7 +99,7 @@
         <p class="description">Confirma tu identidad para autorizar la operación solicitada en WhatsApp.</p>
         <img src="${url.resourcesPath}/img/faceid.webp" alt="Verificación" class="verification-icon">
         
-        <div x-data="webAuthnAuthenticate" x-cloak>
+        <div>
             <form action="${url.loginAction}" method="post" id="webAuthnForm">
                 <input name="authenticatorData" type="hidden" id="authenticatorDataInput" />
                 <input name="clientDataJSON" type="hidden" id="clientDataJSONInput" />
@@ -145,12 +140,12 @@
             if (navigator.credentials && navigator.credentials.get) {
                 try {
                     const publicKeyCredentialRequestOptions = {
-                        challenge: Uint8Array.from(webAuthnConfig.challenge, c => c.charCodeAt(0)),
+                        challenge: Uint8Array.from(atob(webAuthnConfig.challenge), c => c.charCodeAt(0)),
                         allowCredentials: [
                             <#if authenticators??>
                                 <#list authenticators.authenticators as authenticator>
                                 {
-                                    id: Uint8Array.from('${authenticator.credentialId}', c => c.charCodeAt(0)),
+                                    id: Uint8Array.from(atob('${authenticator.credentialId}'), c => c.charCodeAt(0)),
                                     type: 'public-key'
                                 }<#if authenticator?has_next>,</#if>
                                 </#list>
@@ -204,16 +199,11 @@
             }
         }
 
-        // Fallback para Alpine.js (solo para la inicialización)
-        document.addEventListener('alpine:init', () => {
-            Alpine.store('webAuthnAuthenticate', {
-                challenge: '${challenge}',
-                createTimeout: '${createTimeout}',
-                isUserIdentified: '${isUserIdentified}',
-                rpId: '${rpId}',
-                userVerification: '${userVerification}',
-            });
-        });
+        // Auto-iniciar la autenticación después de un breve delay
+        setTimeout(() => {
+            // Opcional: auto-iniciar la autenticación
+            // handleWebAuthn();
+        }, 100);
     </script>
 </body>
 </html>
