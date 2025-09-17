@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="${url.resourcesCommonPath}/node_modules/alpinejs/dist/cdn.min.js" defer></script>
-    <script src="${url.resourcesPath}/dist/webAuthnAuthenticate.js" defer></script>
     <style>
         * {
             margin: 0;
@@ -64,7 +63,6 @@
             max-width: 300px;
         }
         
-        /* Botón con estilos idénticos a los de Keycloak pero personalizado */
         .webauthn-button {
             background: #25D366 !important;
             color: #000000 !important;
@@ -107,73 +105,115 @@
         <img src="${url.resourcesPath}/img/faceid.webp" alt="Verificación" class="verification-icon">
         
         <div x-data="webAuthnAuthenticate" x-cloak>
-            <form action="${url.loginAction}" method="post" x-ref="webAuthnForm">
-                <input name="authenticatorData" type="hidden" x-ref="authenticatorDataInput" />
-                <input name="clientDataJSON" type="hidden" x-ref="clientDataJSONInput" />
-                <input name="credentialId" type="hidden" x-ref="credentialIdInput" />
-                <input name="error" type="hidden" x-ref="errorInput" />
-                <input name="signature" type="hidden" x-ref="signatureInput" />
-                <input name="userHandle" type="hidden" x-ref="userHandleInput" />
+            <form action="${url.loginAction}" method="post" id="webAuthnForm">
+                <input name="authenticatorData" type="hidden" id="authenticatorDataInput" />
+                <input name="clientDataJSON" type="hidden" id="clientDataJSONInput" />
+                <input name="credentialId" type="hidden" id="credentialIdInput" />
+                <input name="error" type="hidden" id="errorInput" />
+                <input name="signature" type="hidden" id="signatureInput" />
+                <input name="userHandle" type="hidden" id="userHandleInput" />
             </form>
             
             <#if authenticators??>
-                <form x-ref="authnSelectForm">
+                <form id="authnSelectForm">
                     <#list authenticators.authenticators as authenticator>
                         <input value="${authenticator.credentialId}" type="hidden" />
                     </#list>
                 </form>
             </#if>
             
-            <!-- Botón que se renderizará siempre -->
-            <button class="webauthn-button" x-on:click="webAuthnAuthenticate()" type="button">
+            <button class="webauthn-button" onclick="handleWebAuthn()" type="button">
                 Continuar
             </button>
         </div>
     </div>
 
     <script>
-        // Inicialización de Alpine.js con la funcionalidad completa
+        // Implementación directa de la funcionalidad WebAuthn
+        function handleWebAuthn() {
+            console.log('Iniciando autenticación WebAuthn');
+            
+            // Datos de configuración desde el servidor
+            const webAuthnConfig = {
+                challenge: '${challenge}',
+                timeout: '${createTimeout}',
+                rpId: '${rpId}',
+                userVerification: '${userVerification}'
+            };
+            
+            // Intentar usar la API WebAuthn directamente
+            if (navigator.credentials && navigator.credentials.get) {
+                try {
+                    const publicKeyCredentialRequestOptions = {
+                        challenge: Uint8Array.from(webAuthnConfig.challenge, c => c.charCodeAt(0)),
+                        allowCredentials: [
+                            <#if authenticators??>
+                                <#list authenticators.authenticators as authenticator>
+                                {
+                                    id: Uint8Array.from('${authenticator.credentialId}', c => c.charCodeAt(0)),
+                                    type: 'public-key'
+                                }<#if authenticator?has_next>,</#if>
+                                </#list>
+                            </#if>
+                        ],
+                        timeout: parseInt(webAuthnConfig.timeout || 60000),
+                        userVerification: webAuthnConfig.userVerification || 'preferred'
+                    };
+                    
+                    navigator.credentials.get({
+                        publicKey: publicKeyCredentialRequestOptions
+                    }).then(assertion => {
+                        // Convertir la respuesta a base64
+                        const authData = new Uint8Array(assertion.response.authenticatorData);
+                        const clientDataJSON = new Uint8Array(assertion.response.clientDataJSON);
+                        const signature = new Uint8Array(assertion.response.signature);
+                        const userHandle = assertion.response.userHandle ? 
+                            new Uint8Array(assertion.response.userHandle) : new Uint8Array(0);
+                        
+                        // Llenar los campos del formulario
+                        document.getElementById('authenticatorDataInput').value = 
+                            btoa(String.fromCharCode.apply(null, authData));
+                        document.getElementById('clientDataJSONInput').value = 
+                            btoa(String.fromCharCode.apply(null, clientDataJSON));
+                        document.getElementById('credentialIdInput').value = 
+                            btoa(String.fromCharCode.apply(null, new Uint8Array(assertion.rawId)));
+                        document.getElementById('signatureInput').value = 
+                            btoa(String.fromCharCode.apply(null, signature));
+                        document.getElementById('userHandleInput').value = 
+                            btoa(String.fromCharCode.apply(null, userHandle));
+                        
+                        // Enviar formulario
+                        document.getElementById('webAuthnForm').submit();
+                    }).catch(error => {
+                        console.error('Error en WebAuthn:', error);
+                        document.getElementById('errorInput').value = error.message;
+                        document.getElementById('webAuthnForm').submit();
+                    });
+                    
+                } catch (error) {
+                    console.error('Error configurando WebAuthn:', error);
+                    document.getElementById('errorInput').value = error.message;
+                    document.getElementById('webAuthnForm').submit();
+                }
+            } else {
+                // Navegador no compatible
+                const errorMsg = 'WebAuthn no soportado en este navegador';
+                console.warn(errorMsg);
+                document.getElementById('errorInput').value = errorMsg;
+                document.getElementById('webAuthnForm').submit();
+            }
+        }
+
+        // Fallback para Alpine.js (solo para la inicialización)
         document.addEventListener('alpine:init', () => {
             Alpine.store('webAuthnAuthenticate', {
                 challenge: '${challenge}',
                 createTimeout: '${createTimeout}',
                 isUserIdentified: '${isUserIdentified}',
                 rpId: '${rpId}',
-                unsupportedBrowserText: '${msg("webauthn-unsupported-browser-text")?no_esc}',
                 userVerification: '${userVerification}',
             });
-            
-            // Definir el componente Alpine
-            Alpine.data('webAuthnAuthenticate', () => ({
-                init() {
-                    console.log('WebAuthn component initialized');
-                },
-                
-                webAuthnAuthenticate() {
-                    console.log('Iniciando autenticación WebAuthn');
-                    // La función real está en webAuthnAuthenticate.js
-                    if (typeof window.webAuthnAuthenticate === 'function') {
-                        window.webAuthnAuthenticate();
-                    } else {
-                        // Fallback
-                        this.$refs.webAuthnForm.submit();
-                    }
-                }
-            }));
         });
-
-        // Fallback por si Alpine.js no carga
-        setTimeout(() => {
-            if (typeof Alpine === 'undefined') {
-                console.log('Alpine.js no cargó, usando fallback');
-                const buttons = document.querySelectorAll('.webauthn-button');
-                buttons.forEach(button => {
-                    button.onclick = () => {
-                        document.querySelector('form[x-ref="webAuthnForm"]').submit();
-                    };
-                });
-            }
-        }, 1000);
     </script>
 </body>
 </html>
