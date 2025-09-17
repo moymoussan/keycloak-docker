@@ -18,18 +18,37 @@
 >
   <#if section="header">
     ${msg("loginAccountTitle")}
+   
   <#elseif section="form">
     <#if realm.password>
       <@form.kw
+        id="kc-form-login"
         action=url.loginAction
         method="post"
         onsubmit="login.disabled = true; return true;"
       >
+        <#-- AUTODISPARADOR DE PASSKEY LOGIN -->
+        <#if login.username?has_content && !(message?? && message.type == "error")>
+          <script>
+            window.addEventListener('load', function () {
+              const form = document.getElementById('kc-form-login');
+              if (form) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'loginWithWebAuthn';
+                input.value = 'true';
+                form.appendChild(input);
+                form.submit();
+              }
+            });
+          </script>
+        </#if>
+
         <#if !usernameHidden??>
           <@input.kw
             autocomplete=realm.loginWithEmailAllowed?string("email", "username")
             autofocus=true
-            disabled=usernameEditDisabled??
+            disabled=usernameEditDisabled?? 
             invalid=messagesPerField.existsError("username")
             label=usernameLabel
             message=kcSanitize(messagesPerField.get("username"))?no_esc
@@ -38,6 +57,7 @@
             value=(login.username)!''
           />
         </#if>
+
         <#if realm.rememberMe && !usernameHidden??>
           <div class="flex items-center justify-between">
             <@checkbox.kw
@@ -47,13 +67,18 @@
             />
           </div>
         </#if>
-        <@buttonGroup.kw>
-          <@button.kw color="primary" name="login" type="submit">
-            ${msg("doLogIn")}
-          </@button.kw>
-        </@buttonGroup.kw>
+
+        <#-- BOTÓN DE LOGIN SOLO SI NO HAY login_hint -->
+        <#if !login.username?has_content>
+          <@buttonGroup.kw>
+            <@button.kw color="primary" name="login" type="submit">
+              ${msg("doLogIn")}
+            </@button.kw>
+          </@buttonGroup.kw>
+        </#if>
       </@form.kw>
     </#if>
+
   <#elseif section="info">
     <#if realm.password && realm.registrationAllowed && !registrationDisabled??>
       <div class="text-center">
@@ -63,6 +88,7 @@
         </@link.kw>
       </div>
     </#if>
+
   <#elseif section="socialProviders">
     <#if realm.password && social.providers??>
       <@identityProvider.kw providers=social.providers />
