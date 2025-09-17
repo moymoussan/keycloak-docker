@@ -5,48 +5,9 @@
   <#if section="title">
     Verificación segura - WhatsApp
   <#elseif section="header">
-    <style>
-      /* Reset completo de estilos heredados */
-      body {
-        background: #000000 !important;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-        color: white !important;
-      }
-      
-      .card {
-        all: unset !important;
-        background: #000000 !important;
-        width: 100% !important;
-        max-width: 400px !important;
-        margin: 0 auto !important;
-      }
-      
-      .card-header {
-        all: unset !important;
-        text-align: left !important;
-        padding: 0 !important;
-        margin: 1rem 0 1rem 1rem !important;
-      }
-      
-      .card-content {
-        all: unset !important;
-        background: #000000 !important;
-        padding: 20px !important;
-        text-align: center !important;
-      }
-      
-      /* Ocultar elementos no deseados */
-      .alert, .text-secondary-600, .text-sm, .heading, .logo {
-        display: none !important;
-      }
-    </style>
-    
-    <!-- Logo personalizado -->
-    <div style="margin-left: 1rem; margin-top: 1rem;">
-      <img src="${url.resourcesPath}/img/logo-nono-white.png" alt="Logo" style="height: 40px;">
-    </div>
+    <!-- Header vacío porque el logo ya está en template.ftl -->
   <#elseif section="form">
-    <div x-data="webAuthnAuthenticate" style="background: #000000; text-align: center;">
+    <div x-data="webAuthnAuthenticate" style="text-align: center; padding: 20px;">
       <form action="${url.loginAction}" method="post" x-ref="webAuthnForm">
         <input name="authenticatorData" type="hidden" x-ref="authenticatorDataInput" />
         <input name="clientDataJSON" type="hidden" x-ref="clientDataJSONInput" />
@@ -64,8 +25,8 @@
         </form>
       </#if>
       
-      <!-- Contenido personalizado -->
-      <h1 style="font-size: 28px; font-weight: 600; color: #ffffff; margin-bottom: 12px; margin-top: 2rem;">
+      <!-- Contenido centrado -->
+      <h1 style="font-size: 28px; font-weight: 600; margin-bottom: 12px; margin-top: 2rem;">
         Verificación segura 🔐
       </h1>
       <p style="font-size: 16px; color: #a0a0a0; line-height: 1.5; margin-bottom: 3rem; max-width: 300px; margin-left: auto; margin-right: auto;">
@@ -74,33 +35,16 @@
       
       <img src="${url.resourcesPath}/img/faceid.webp" alt="Verificación" style="width: 120px; height: 120px; margin-bottom: 3rem;">
       
-      <!-- Botón personalizado pero manteniendo la funcionalidad Alpine -->
-      <div style="text-align: center;">
-        <@button.kw 
-          @click="webAuthnAuthenticate" 
-          color="primary" 
-          type="button"
-          style="background: #25D366 !important; color: #000000 !important; border: none !important; padding: 16px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 16px !important; width: 300px !important; max-width: 100% !important; cursor: pointer !important; margin: 0 auto !important; display: block !important;"
-        >
-          Continuar
-        </@button.kw>
-      </div>
+      <!-- Botón con estilos personalizados -->
+      <@button.kw 
+        @click="webAuthnAuthenticate" 
+        color="primary" 
+        type="button"
+        style="background: #25D366 !important; color: #000000 !important; border: none !important; padding: 16px !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 16px !important; width: 300px !important; max-width: 100% !important; cursor: pointer !important; margin: 0 auto !important; display: block !important;"
+      >
+        Continuar
+      </@button.kw>
     </div>
-    
-    <style>
-      /* Asegurar que todo esté negro */
-      html, body, .container, .card, .card-content, .card-header {
-        background: #000000 !important;
-        color: white !important;
-      }
-      
-      /* Reset de márgenes y paddings */
-      * {
-        margin: 0 !important;
-        padding: 0 !important;
-        box-sizing: border-box !important;
-      }
-    </style>
   </#if>
 </@layout.registrationLayout>
 
