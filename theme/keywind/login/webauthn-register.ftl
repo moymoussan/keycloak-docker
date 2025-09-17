@@ -17,10 +17,12 @@
         <input name="publicKeyCredentialId" type="hidden" x-ref="publicKeyCredentialIdInput" />
         <input name="transports" type="hidden" x-ref="transportsInput" />
       </form>
+
       <@buttonGroup.kw>
         <@button.kw @click="registerSecurityKey" color="primary" type="submit">
           ${msg("doRegister")}
         </@button.kw>
+
         <#if !isSetRetry?has_content && isAppInitiatedAction?has_content>
           <form action="${url.loginAction}" method="post">
             <@button.kw color="secondary" name="cancel-aia" type="submit" value="true">
@@ -36,19 +38,20 @@
 <script>
   document.addEventListener('alpine:init', () => {
     Alpine.store('webAuthnRegister', {
-      attestationConveyancePreference: '${attestationConveyancePreference}',
-      authenticatorAttachment: '${authenticatorAttachment}',
-      challenge: '${challenge}',
-      createTimeout: '${createTimeout}',
-      excludeCredentialIds: '${excludeCredentialIds}',
-      requireResidentKey: '${requireResidentKey}',
-      rpEntityName: '${rpEntityName}',
-      rpId: '${rpId}',
-      signatureAlgorithms: '${signatureAlgorithms}',
+      signatureAlgorithms: '${signatureAlgorithms?join(",")?default("")}',
+      attestationConveyancePreference: '${attestationConveyancePreference?default("")}',
+      authenticatorAttachment: '${authenticatorAttachment?default("")}',
+      challenge: '${challenge?default("")}',
+      createTimeout: '${createTimeout?default("")}',
+      excludeCredentialIds: '${excludeCredentialIds?default("")}',
+      requireResidentKey: '${requireResidentKey?default("")}',
+      rpEntityName: '${rpEntityName?default("")}',
+      rpId: '${rpId?default("")}',
       unsupportedBrowserText: '${msg("webauthn-unsupported-browser-text")?no_esc}',
-      userId: '${userid}',
-      userVerificationRequirement: '${userVerificationRequirement}',
-      username: '${username}',
+      userId: '${userid?default("")}',
+      userVerificationRequirement: '${userVerificationRequirement?default("")}',
+      username: '${username?default("")}'
     })
   })
 </script>
+
